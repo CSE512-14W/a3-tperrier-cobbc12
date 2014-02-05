@@ -36,7 +36,7 @@ $.extend(WordCount.prototype,{
 
 
 var Counter = function(){
-	this.counts = {}
+	this.counts = {};
 }
 
 $.extend(Counter.prototype,{
