@@ -16,7 +16,7 @@ $.extend(WordCount.prototype,{
 
 	//set this.tweets from json or str
 	loadJSON:function(json){
-		this.tweets = json;
+		this.tweets = json;	
 		return this;
 	},
 	
