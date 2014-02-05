@@ -77,5 +77,9 @@ $.extend(Counter.prototype,{
 			else
 				return 0
 		});
+	},
+	
+	keys:function(){
+		
 	}
 });
