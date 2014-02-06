@@ -83,3 +83,34 @@ $.extend(Counter.prototype,{
 		
 	}
 });
+
+
+/*************
+Helper Class: Timer
+*************/
+var Timer = function() {
+	this.times = [];
+};
+
+$.extend(Timer.prototype,{
+	start:function(){
+		this.times = [Date.now()];
+		return this;
+	},
+	start_log:function(str){
+		str = str || '';
+		this.start();
+		console.log("Started "+str);
+	},
+	split:function(){
+		this.times.push(Date.now());
+		return this;
+	},
+	delta:function(){
+		this.split();
+		return (this.times[this.times.length-1]-this.times[0])/1000
+	},
+	log:function(){
+		console.log("Time Delta: "+this.delta());
+	}
+});
