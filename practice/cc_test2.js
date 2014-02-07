@@ -7,17 +7,19 @@ var make_timeline = function(data) {
 	var width = 1000, height = 500, barWidth = width/data.length;
 	
 	var count = function(d){return d.count};
-	var time = function(d){return new Date(d.time * 1000)};
+	var time = function(d){return d.time};
 	
-	var x_scale = d3.scale.linear()
-		.range([0, width])
+	var x_scale = d3.time.scale()
+		.domain([time(data[0]),time(data[data.length-1])])
+		.range([0, width]);
 	
 	var y_scale = d3.scale.linear()
+		.domain([0,d3.max(data,count)])
 		.range([height,0]); 
 	
 	var line = d3.svg.line()
-    	.x(time)
-    	.y(count);
+    	.x(function(d){return x_scale(time(d))})
+    	.y(function(d){return y_scale(count(d))});
 	
 	global.chart = d3.select('#chart')
 		.attr("width", width).attr("height", height)
@@ -32,7 +34,7 @@ $(function(){
 	console.log('start');
 	$.ajax({
 		dataType: 'json', 
-		url: 'small.json',
+		url: '1000_seconds.json',
 		success: function(data){
 			console.log('got json', data);
 			global.words.loadJSON(data);

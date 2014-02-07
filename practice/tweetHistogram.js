@@ -48,17 +48,13 @@ $.extend(WordCount.prototype,{
 			return 0
 	},
 	
-	getTweetTimeline:function(){
+
+	getTweetTimeline:function(counts,range){
 		var per_sec = [];
-		for (var t = 0, c=0, s=Math.floor(this.tweets[0].time); t < this.tweets.length; t++){
-			if (Math.floor(this.tweets[t].time) == s){
-				c += 1; 
-			}
-			else{
-				per_sec.push({'time':s, 'count':c});
-				s = Math.floor(this.tweets[t].time);
-				c = 1;
-			}
+		console.log(this);
+		for (var t = this.range.s; t <= this.range.e; t++){
+			per_sec.push({'time': new Date(t*1000), 
+				'count': this.counts[t-this.range.s][0]})
 		}
 		return per_sec;
 	},
