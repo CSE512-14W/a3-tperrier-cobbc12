@@ -7,20 +7,24 @@ var make_timeline = function(data) {
 	var width = 1000, height = 500, barWidth = width/data.length;
 	
 	var count = function(d){return d.count};
-	var time = function(d){console.log(d.time); return new Date(d.time * 1000)};
+	var time = function(d){return new Date(d.time * 1000)};
 	
-	global.chart = d3.select('#chart')
-	.attr("width", width).attr("height", height);
+	var x_scale = d3.scale.linear()
+		.range([0, width])
+	
+	var y_scale = d3.scale.linear()
+		.range([height,0]); 
 	
 	var line = d3.svg.line()
     	.x(time)
     	.y(count);
-
-	var svg = d3.select("#chart")
-  		.append("path")
-  			.datum(data)
-  			.attr("class", "line")
-  			.attr("d", line);
+	
+	global.chart = d3.select('#chart')
+		.attr("width", width).attr("height", height)
+		.append("path")
+			.datum(data)
+			.attr("class", "line")
+			.attr("d", line);
 }
 
 
