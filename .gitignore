@@ -1,5 +1,5 @@
-.csv
-.json
+*.csv
+*.json
 csv/
 ignore/
 */libs/

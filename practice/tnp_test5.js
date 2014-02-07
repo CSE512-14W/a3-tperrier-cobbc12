@@ -15,18 +15,31 @@ var CF = function(){ // namespace for Chart Functions
 	pub.success = function(data){
 		
 		//get chart svg object
-		G.chart = d3.select('#chart')
+		G.svg = d3.select('#chart')
 		.attr("width", G.dims.width).attr("height", G.dims.height);
 		
+		//get g elements for both charts
+		G.static = G.svg.select('#static');
+		G.dynamic = G.svg.select('#dynamic');
+		
 		G.timer.start_log("Load JSON...");
+		console.log(data);
 		G.words.loadJSON(data);
 		G.timer.log("End Load");
 		
+		G.timer.start_log("Making Histogram...")
 		histData = G.words.getHistogram();
+		G.timer.log("End Histogram");
+		
 		CF.setup_bar_chart(histData);
-		G.timer.start_log("Bar Chart");
-		CF.make_bar_chart(histData);
-		G.timer.log("End Bar Chart");
+		
+		G.timer.start_log("Making Static...");
+		CF.make_static(histData);
+		G.timer.log("End Static");
+		
+		G.timer.start_log("Making Dynamic...");
+		CF.make_dynamic(histData);
+		G.timer.log("End Dynamic");
 	}
 	
 	// mouseover histogram rect 
@@ -61,19 +74,20 @@ var CF = function(){ // namespace for Chart Functions
 		
 	}
 	
-	pub.make_bar_chart = function(data){
-		console.log(G.dims);
-		var bars = G.chart.selectAll('g')
-		.data(data).enter().append('g')
+	pub.get_bars = function(ele,data) {
+		return ele.selectAll('g').data(data).enter().append('g')
 		.attr("transform", function(d, i) { return "translate(" + i * G.dims.barWidth + ")"; });
-		
+	},
+	
+	pub.make_static = function(data){
+		var bars = pub.get_bars(G.static,data);
 		// quarter background for mouseover
 		bars.append('rect')
 		.attr('width', G.dims.barWidth-1)
 		.attr('height',G.dims.height*0.25)
 		.attr('y',G.dims.height*0.75)
 		.attr('class', 'background')
-		.on('mouseover',CF.showStats)out
+		.on('mouseover',CF.showStats)
 		.on('mouseout',CF.clearStats);
 		
 		//main bars
@@ -84,7 +98,26 @@ var CF = function(){ // namespace for Chart Functions
 		.attr('class', 'bars')
 		.on('mouseover',CF.showStats)
 		.on('mouseout',CF.clearStats);
+	}
 	
+	pub.make_dynamic = function(data){
+		var bars = pub.get_bars(G.dynamic,data);
+		
+		//main dynamic bars
+		bars.append('rect')
+		.attr('width',G.dims.barWidth-1)
+		.attr('height',function(d){return G.dims.height-CF.y_scale(CF.count(d)*0)})
+		.attr('y',function(d){return CF.y_scale(CF.count(d)*0)})
+		.attr('class', 'dynamic');
+	},
+	
+	pub.change_dynamic = function(data){
+		var bars = G.dynamic.selectAll('rect')
+		.data(data)
+		.transition()
+		.duration(1000)
+		.attr('height',function(d){return G.dims.height-CF.y_scale(CF.count(d))})
+		.attr('y',function(d){return CF.y_scale(CF.count(d))})
 	}
 	
 	return pub;//return public variables
@@ -95,7 +128,7 @@ $(function(){
 	//ajax load of json file
 	$.ajax({
 		dataType: 'json', 
-		url: 'small.json',
+		url: 'data/1000_seconds.json',
 		success:CF.success
 	});
 });

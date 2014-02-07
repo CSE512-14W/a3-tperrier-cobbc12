@@ -10,6 +10,11 @@
   fill: white;
 }
 
+#chart rect.dynamic {
+	fill:black;
+	
+}
+
 #chart text {
   fill: white;
   font: 10px sans-serif;
