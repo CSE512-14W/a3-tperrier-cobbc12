@@ -1,3 +1,28 @@
+Array.prototype.sum = function(f){
+	f = f || function(d){return d}
+	return this.reduce(function(a, b) { return [f(a) + f(b)]; }, 0);
+	}
+	
+	
+var getWindowAvgArray = function(array, win){
+	ret_arr = []
+	for (var i = 0; i < array.length; i++){
+		beg = i - win
+		end = i + win
+		if (beg < 0){
+			beg = 0
+		}
+		if (end > array.length -1){
+			end = array.length -1
+		}
+		ret_arr.push(array.slice(beg,end).sum(function(d){
+			return d[0];
+		})/(1.0*(end-beg));			
+	}
+return ret_arr;
+}	
+	
+
 /*************
 Word Count Class
 - reads a json array of tweets
@@ -42,6 +67,7 @@ $.extend(WordCount.prototype,{
 		return counts.sort(this.sortCounts.bind(this));
 	},
 	
+
 	sortCounts:function(a,b){
 		if(a.count < b.count)
 			return 1*this.order;
@@ -51,21 +77,19 @@ $.extend(WordCount.prototype,{
 			return 0;
 	},
 	
-	getTweetTimeline:function(){
+	
+	getTweetTimeline:function(word_pos, win){
+		var word_pos = word_pos || 0; 
+		var win = win || 0; 
 		var per_sec = [];
-		for (var t = 0, c=0, s=Math.floor(this.tweets[0].time); t < this.tweets.length; t++){
-			if (Math.floor(this.tweets[t].time) == s){
-				c += 1; 
-			}
-			else{
-				per_sec.push({'time':s, 'count':c});
-				s = Math.floor(this.tweets[t].time);
-				c = 1;
-			}
+		var new_counts = getWindowAvgArray(this.counts, win); 
+		for (var t = this.range.s+1; t <= this.range.e; t++){
+			per_sec.push({'time': new Date(t*1000), 
+				'count':
+ this.counts[t-this.range.s][word_pos] - this.counts[t-this.range.s-1][word_pos]})
 		}
 		return per_sec;
-	},
-
+	}
 });
 
 

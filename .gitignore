@@ -3,3 +3,4 @@
 csv/
 ignore/
 */libs/
+.DS_Store
