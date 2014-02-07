@@ -39,7 +39,6 @@ $.extend(WordCount.prototype,{
 		});
 		return counts.sort(this.sortCounts.bind(this));
 	},
-	
 	sortCounts:function(a,b){
 		if(a.count < b.count)
 			return 1*this.order
@@ -47,7 +46,22 @@ $.extend(WordCount.prototype,{
 			return -1*this.order
 		else
 			return 0
-	}
+	},
+	
+	getTweetTimeline:function(){
+		var per_sec = [];
+		for (var t = 0, c=0, s=Math.floor(this.tweets[0].time); t < this.tweets.length; t++){
+			if (Math.floor(this.tweets[t].time) == s){
+				c += 1; 
+			}
+			else{
+				per_sec.push({'time':s, 'count':c});
+				s = Math.floor(this.tweets[t].time);
+				c = 1;
+			}
+		}
+		return per_sec;
+	},
 
 });
 

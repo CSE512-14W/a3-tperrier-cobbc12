@@ -37,3 +37,9 @@
 	width: 200px;
 	padding: 0px 10px;  
 }
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
