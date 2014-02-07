@@ -1,11 +1,12 @@
 var G = { // object for G scope
 	words:new WordCount(),
 	timer:new Timer(),
-	dims:{//chart dimensions
-		width:1000,
-		height:500
-	},
+	margin:{top:10,right:30,bottom:20,left:30},
 }
+G.dims = {//chart dimensions
+		width:1000-G.margin.left-G.margin.right,
+		height:500-G.margin.top-G.margin.bottom
+	}
 
 var CF = function(){ // namespace for Chart Functions
 	
@@ -16,11 +17,14 @@ var CF = function(){ // namespace for Chart Functions
 		
 		//get chart svg object
 		G.svg = d3.select('#chart')
-		.attr("width", G.dims.width).attr("height", G.dims.height);
+		.attr("width", G.dims.width+G.margin.left+G.margin.right)
+		.attr("height", G.dims.height+G.margin.top+G.margin.bottom);
 		
 		//get g elements for both charts
-		G.static = G.svg.select('#static');
-		G.dynamic = G.svg.select('#dynamic');
+		G.static = G.svg.select('#static')
+		.attr('transform','translate('+G.margin.left+','+G.margin.top+')');
+		G.dynamic = G.svg.select('#dynamic')
+		.attr('transform','translate('+G.margin.left+','+G.margin.top+')');
 		
 		G.timer.start_log("Load JSON...");
 		console.log(data);
@@ -44,21 +48,19 @@ var CF = function(){ // namespace for Chart Functions
 	
 	// mouseover histogram rect 
 	pub.showStats = function(){
+		if(G.last) G.last.style('fill','steelblue');
 		var that = this;
 		//if background mouseover find next sibling
 		if ($(this).attr('class') == 'background'){
 			that = d3.select($(this).next('rect'))[0][0][0];
+		}else if ($(this).attr('class') == 'dynamic') {
+			var index = $(G.dynamic[0][0]).children().index($(this).parent());
+			that = d3.select($($(G.static[0][0]).children()[index]).children('rect')[1])[0][0];
 		}
 		$('#stats #word').text(that.__data__.word);
 		$('#stats #count').text(that.__data__.count);
-	} 
-	
-	//mouse out
-	pub.clearStats = function(){
-		var that = this;
-		if ($(this).attr('class') == 'background'){
-			that = d3.select($(this).next('rect'))[0][0][0];
-		}
+		G.last = d3.select(that);
+		G.last.style('fill','yellow');
 	} 
 	
 	//helper function to get count and word
@@ -87,8 +89,7 @@ var CF = function(){ // namespace for Chart Functions
 		.attr('height',G.dims.height*0.25)
 		.attr('y',G.dims.height*0.75)
 		.attr('class', 'background')
-		.on('mouseover',CF.showStats)
-		.on('mouseout',CF.clearStats);
+		.on('mouseover',CF.showStats);
 		
 		//main bars
 		bars.append('rect')
@@ -96,8 +97,7 @@ var CF = function(){ // namespace for Chart Functions
 		.attr('height',function(d){return G.dims.height-CF.y_scale(CF.count(d))})
 		.attr('y',function(d){return CF.y_scale(CF.count(d))})
 		.attr('class', 'bars')
-		.on('mouseover',CF.showStats)
-		.on('mouseout',CF.clearStats);
+		.on('mouseover',CF.showStats);
 	}
 	
 	pub.make_dynamic = function(data){
@@ -106,9 +106,10 @@ var CF = function(){ // namespace for Chart Functions
 		//main dynamic bars
 		bars.append('rect')
 		.attr('width',G.dims.barWidth-1)
-		.attr('height',function(d){return G.dims.height-CF.y_scale(CF.count(d)*0)})
-		.attr('y',function(d){return CF.y_scale(CF.count(d)*0)})
-		.attr('class', 'dynamic');
+		.attr('height',function(d){return G.dims.height-CF.y_scale(CF.count(d)*.5)})
+		.attr('y',function(d){return CF.y_scale(CF.count(d)*.5)})
+		.attr('class', 'dynamic')
+		.on('mouseover',CF.showStats);
 	},
 	
 	pub.change_dynamic = function(data){
@@ -118,6 +119,7 @@ var CF = function(){ // namespace for Chart Functions
 		.duration(1000)
 		.attr('height',function(d){return G.dims.height-CF.y_scale(CF.count(d))})
 		.attr('y',function(d){return CF.y_scale(CF.count(d))})
+		.on('mouseover',CF.showStats);
 	}
 	
 	return pub;//return public variables
@@ -128,7 +130,7 @@ $(function(){
 	//ajax load of json file
 	$.ajax({
 		dataType: 'json', 
-		url: 'data/1000_seconds.json',
+		url: 'data/all_seconds.json',
 		success:CF.success
 	});
 });

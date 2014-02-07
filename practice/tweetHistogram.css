@@ -2,17 +2,13 @@
   fill: steelblue;
 }
 
-#chart rect.bars:hover, #chart rect.background:hover+rect.bars {
-	fill: yellow;
-}
-
 #chart rect.background {
   fill: white;
 }
 
 #chart rect.dynamic {
 	fill:black;
-	
+	fill-opacity:.3;
 }
 
 #chart text {

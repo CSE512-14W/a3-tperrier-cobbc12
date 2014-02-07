@@ -31,21 +31,24 @@ $.extend(WordCount.prototype,{
 		return this.counts[this.range.e-seconds]
 	},
 	
-	getHistogram:function(s,e){
+	getHistogram:function(s,e,ws,we){
 		var s =  s || 0, e = e || this.counts.length, counts = [];
+		var ws = ws || 2, we = we || 124;
 		var start = this.counts[s],end = this.counts[e-1];
-		this.words.forEach(function(word,i){
-			counts.push({'word':word,'count':end[i+1]-start[i+1]}); //add one because first index is total tweets
-		});
+		for(var i=ws; i<we; i++){
+			//add one because first index is total tweets
+			counts.push({'word':this.words[i],'count':end[i+1]-start[i+1]}); 
+		}
 		return counts.sort(this.sortCounts.bind(this));
 	},
+	
 	sortCounts:function(a,b){
 		if(a.count < b.count)
-			return 1*this.order
+			return 1*this.order;
 		else if(a.count > b.count)
-			return -1*this.order
+			return -1*this.order;
 		else
-			return 0
+			return 0;
 	},
 	
 	getTweetTimeline:function(){
