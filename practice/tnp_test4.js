@@ -10,14 +10,14 @@ fr.onload = function(evt) {
 }
 
 var showStats = function(){
-	console.log("Show");
+	//console.log("Show");
 	$('#stats #word').text(this.__data__.word);
 	$('#stats #count').text(this.__data__.count);
 	d3.select(this).style('fill','yellow');
 }
 
 var clearStats = function(){
-	console.log("Clear");
+	//console.log("Clear");
 	d3.select(this).style('fill','steelblue');
 }
 

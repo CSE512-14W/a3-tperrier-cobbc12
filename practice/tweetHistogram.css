@@ -10,6 +10,11 @@
   fill: white;
 }
 
+#chart rect.dynamic {
+	fill:black;
+	
+}
+
 #chart text {
   fill: white;
   font: 10px sans-serif;
@@ -32,7 +37,6 @@
 	width: 200px;
 	padding: 0px 10px;  
 }
-
 
 .line {
   fill: none;
