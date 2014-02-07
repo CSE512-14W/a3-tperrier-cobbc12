@@ -1,3 +1,4 @@
+/*
 Array.prototype.sum = function(f){
 	f = f || function(d){return d}
 	return this.reduce(function(a, b) { return [f(a) + f(b)]; }, 0);
@@ -20,7 +21,7 @@ var getWindowAvgArray = function(array, win){
 		})/(1.0*(end-beg));			
 	}
 return ret_arr;
-}	
+}	*/
 	
 
 /*************
@@ -82,11 +83,9 @@ $.extend(WordCount.prototype,{
 		var word_pos = word_pos || 0; 
 		var win = win || 0; 
 		var per_sec = [];
-		var new_counts = getWindowAvgArray(this.counts, win); 
 		for (var t = this.range.s+1; t <= this.range.e; t++){
 			per_sec.push({'time': new Date(t*1000), 
-				'count':
- this.counts[t-this.range.s][word_pos] - this.counts[t-this.range.s-1][word_pos]})
+				'count':this.counts[t-this.range.s][word_pos] - this.counts[t-this.range.s-1][word_pos]})
 		}
 		return per_sec;
 	}
