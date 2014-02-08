@@ -17,12 +17,25 @@
   text-anchor: end;
 }
 
-#div-svg {
-	position: relative;
-	display: inline-block;
+#wrapper {
+	position:relative;
+	width:1100px;
+	background-color:#ccc;
+	margin: 10px auto;
+	padding:10px;
+}
+
+.chart-section {
+	position:relative;
 	left: 50%;
-	margin: 50px 0px 0px -500px;
+	margin: 10px 0px 10px -500px;
+}
+
+.chart-border {
+	position:relative;
+	background-color:white;
 	border: 3px double black;
+	display:inline-block;
 }
 
 #stats {

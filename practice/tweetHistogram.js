@@ -59,13 +59,13 @@ $.extend(WordCount.prototype,{
 	
 	getHistogram:function(s,e,ws,we){
 		var s =  s || 0, e = e || this.counts.length, counts = [];
-		var ws = ws || 2, we = we || 124;
+		var ws = ws || 2, we = we || 90;
 		var start = this.counts[s],end = this.counts[e-1];
 		for(var i=ws; i<we; i++){
 			//add one because first index is total tweets
-			counts.push({'word':this.words[i],'count':end[i+1]-start[i+1]}); 
+			counts.push({'word':this.words[i],'count':end[i+1]-start[i+1],'position':i-ws+1}); 
 		}
-		return counts.sort(this.sortCounts.bind(this));
+		return counts;
 	},
 	
 
@@ -78,7 +78,7 @@ $.extend(WordCount.prototype,{
 			return 0;
 	},
 	
-	
+	/*
 	getTweetTimeline:function(word_pos, win){
 		var word_pos = word_pos || 0; 
 		var win = win || 0; 
@@ -88,6 +88,17 @@ $.extend(WordCount.prototype,{
 				'count':this.counts[t-this.range.s][word_pos] - this.counts[t-this.range.s-1][word_pos]})
 		}
 		return per_sec;
+	}*/
+	
+	//gives average tweets per second binned by window
+	getTweetTimeline:function(word,win){
+		var word = this.words.indexOf(word)+1 || 0, win = win || 60;
+		var timeline = [], t_start = this.range.s*1000;
+		for(var i=0; i<this.counts.length-win; i+=win){
+			timeline.push( {'time':new Date(t_start+i),
+				'count':(this.counts[i+win][word]-this.counts[i][word])/win});
+		}
+		return timeline;
 	}
 });
 
@@ -120,5 +131,33 @@ $.extend(Timer.prototype,{
 	log:function(str){
 		str  = str || '';
 		console.log(str+" -- Time Delta: "+this.delta());
+	}
+});
+
+/*************
+Helper Class: Dimensions
+*************/
+var Dimension = function(prop){
+	prop = prop || {}
+	var defaults = {
+		top:10,
+		right:10,
+		bottom:10,
+		left:10,
+		width:1000,
+		height:500
+	}
+	$.extend(true,defaults,prop);
+	$.extend(this,defaults);
+	this.width = this.width-this.left-this.right;
+	this.height = this.height-this.top-this.bottom;
+}
+
+$.extend(Dimension.prototype,{
+	total_width:function(){
+		return this.width+this.left+this.right;
+	},
+	total_height:function(){
+		return this.height+this.top+this.bottom;
 	}
 });

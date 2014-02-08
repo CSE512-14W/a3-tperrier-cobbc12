@@ -18,15 +18,26 @@
 	</head>
 	
 	<body>
-		<div id='div-svg'>
-			<div id="stats">
-				<p><b>Word: </b><i id='word'></i></p>
-				<p><b>Count: </b><i id='count'></i></p>
+		<div id='wrapper'>
+			
+			<div class='chart-section'>
+				<div class='chart-border'>
+					<div id="stats">
+						<p><b>Count: </b><i id='count'></i> <b>Position: </b><i id="position"></i></p>
+						<p><b>Word: </b><i id='word'></i></p>
+					</div>
+					<svg id="chart">
+						<g id="static"></g>
+						<g id="dynamic"></g>
+					</svg>
+				</div>
 			</div>
-			<svg id="chart">
-				<g id="static"></g>
-				<g id="dynamic"></g>
-			</svg>
+			
+			<div class='chart-section'>
+				<div class='chart-border'>
+					<svg id="timeline"></svg>
+				</div>
+			</div>
 		</div>
 	</body>
 	
