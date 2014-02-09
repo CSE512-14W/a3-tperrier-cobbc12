@@ -11,12 +11,6 @@
 	fill-opacity:.3;
 }
 
-#chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: end;
-}
-
 #wrapper {
 	position:relative;
 	width:1100px;
@@ -34,7 +28,7 @@
 .chart-border {
 	position:relative;
 	background-color:white;
-	border: 3px double black;
+	border: 3px solid black;
 	display:inline-block;
 }
 
@@ -60,15 +54,13 @@
   	shape-rendering: crispEdges;
 }
 
+.axis text {
+	fill:black;
+	font: 10px sans-serif;
+}
+
 .brush .extent {
 	stroke: #fff;
 	fill-opacity: .125;
-	shape-rendering: crispEdges;
-}
-
-.axis path,
-	.axis line {
-	fill: none;
-	stroke: #000;
 	shape-rendering: crispEdges;
 }

@@ -57,25 +57,26 @@ $.extend(WordCount.prototype,{
 		return this.counts[this.range.e-seconds]
 	},
 	
-	getHistogram:function(s,e,ws,we){
-		var s =  s || 0, e = e || this.counts.length, counts = [];
-		var ws = ws || 2, we = we || 90;
-		var start = this.counts[s],end = this.counts[e-1];
-		for(var i=ws; i<we; i++){
-			//add one because first index is total tweets
-			counts.push({'word':this.words[i],'count':end[i+1]-start[i+1],'position':i-ws+1}); 
-		}
-		return counts;
+	getIndex:function(date){
+		console.log(date,date.valueOf(),this.range.s,this.range.e,date.valueOf()/100-this.range.s);
+		return Math.floor(date.valueOf()/1000)-this.range.s;
 	},
 	
-
-	sortCounts:function(a,b){
-		if(a.count < b.count)
-			return 1*this.order;
-		else if(a.count > b.count)
-			return -1*this.order;
-		else
-			return 0;
+	getHistogram:function(s,e,ws,we){
+		var s =  s || 0, e = e || this.counts.length, counts = [];
+		if(s instanceof Date) {
+			s = this.getIndex(s);
+		}
+		if(e instanceof Date) {
+			e = this.getIndex(e);
+		}
+		console.log(s,e);
+		var ws = ws || 3, we = we || 90;
+		var start = this.counts[s],end = this.counts[e-1];
+		for(var i=ws; i<we; i++){
+			counts.push({'word':this.words[i],'count':end[i]-start[i],'position':i-ws}); 
+		}
+		return counts;
 	},
 	
 	/*
@@ -95,7 +96,7 @@ $.extend(WordCount.prototype,{
 		var word = this.words.indexOf(word)+1 || 0, win = win || 60;
 		var timeline = [], t_start = this.range.s*1000;
 		for(var i=0; i<this.counts.length-win; i+=win){
-			timeline.push( {'time':new Date(t_start+i),
+			timeline.push( {'time':new Date(t_start+(i*1000)),
 				'count':(this.counts[i+win][word]-this.counts[i][word])/win});
 		}
 		return timeline;
