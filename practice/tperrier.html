@@ -18,42 +18,50 @@
 	</head>
 	
 	<body>
+		
 		<div id='wrapper'>
+		
+			<div id='left-col'></div>
 			
-			<div class='tabs'>
-				<ul>
-					<li id='timeline' class='active'>By Time</li>
-					<li id='word'>By Word</li>
-				</ul>
-				<div class='content'>
-			
-					<div id='timeline' class='chart-section'>
-						<div class='chart-border'>
-							<svg id='timeline'></svg>
+			<div id='right-col'>
+				
+				<div class='tabs'>
+					<ul>
+						<li id='timeline' class='active'>By Time</li>
+						<li id='word'>By Word</li>
+					</ul>
+					<div class='content'>
+				
+						<div id='timeline' class='chart-section'>
+							<div class='chart-border'>
+								<svg id='timeline'></svg>
+							</div>
 						</div>
-					</div>
-					
-					<div id='word' class='chart-section'>
-						<div class='chart-border' style="width:1076px;height:75px;">
-							Select by word.
+						
+						<div id='word' class='chart-section'>
+							<div class='chart-border' style="width:1076px;height:75px;">
+								Select by word.
+							</div>
 						</div>
+					</div> <!-- close content -->
+				</div><!-- close tabs -->
+				
+				<div class='chart-section'>
+					<div class='chart-border'>
+						<dl id="stats">
+							<dt>Word:</dt><dd id='word' style='width:100px' ></dd>
+							<dt>Total:</dt><dd id='total' style='width:50px'></dd>
+							<dt>Slice:</dt><dd id='stack' style='width:50px'></dd>
+							<dt>Postion:</dt><dd id='position' style='width:15px'></dd>
+						</dl>
+						<svg id="chart"></svg>
 					</div>
-				</div> <!-- close content -->
-			</div><!-- close tabs -->
-			
-			<div class='chart-section'>
-				<div class='chart-border'>
-					<dl id="stats">
-						<dt>Word:</dt><dd id='word' style='width:100px' ></dd>
-						<dt>Total:</dt><dd id='total' style='width:50px'></dd>
-						<dt>Slice:</dt><dd id='stack' style='width:50px'></dd>
-						<dt>Postion:</dt><dd id='position' style='width:15px'></dd>
-					</dl>
-					<svg id="chart"></svg>
 				</div>
+				
 			</div>
-			
+		
 		</div>
+		
 	</body>
 	
 </html>

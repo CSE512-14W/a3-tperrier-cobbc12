@@ -66,7 +66,7 @@ var CF = function(){ // namespace for Chart Functions
 		
 		G.timer.start_log("Making Histogram...");
 		CF.make_bar_chart(histData);
-		//CF.make_dynamic_bars(histData);
+		CF.make_word_list(histData);
 		G.timer.log("End Histogram");
 	}
 	
@@ -74,7 +74,11 @@ var CF = function(){ // namespace for Chart Functions
 	pub.histHover = function(){
 		if(G.last)G.last.style('fill-opacity',0);
 		var hover = d3.select($(this).parent().children('.hover')[0])[0][0];
-		var total = d3.select($(this).parent().children('.total')[0])[0][0];
+		if($(this).prop('tagName')=='TR'){
+			hover = G.chart.selectAll('g').selectAll('rect')[$(this).index()][2];
+		}
+		
+		var total = d3.select($(hover).parent().children('.total')[0])[0][0];
 	
 		$('#stats dd').each(function(i){
 			$(this).text(total.__data__[$(this).attr('id')]);
@@ -86,6 +90,9 @@ var CF = function(){ // namespace for Chart Functions
 	//click histogram rect
 	pub.histClick = function() {
 		var hover = d3.select($(this).parent().children('.hover')[0])[0][0];
+		if($(this).prop('tagName')=='TR'){
+			hover = G.chart.selectAll('g').selectAll('rect')[$(this).index()][2];
+		}
 		G.words.word = hover.__data__.word;
 		var extent = G.timeline.brush.extent();
 		CF.change_bars(G.words.getHistogram(extent[0],extent[1]));
@@ -240,6 +247,18 @@ var CF = function(){ // namespace for Chart Functions
 		.attr("class", "line")
 		.attr("d", line);
 		*/
+	}
+	
+	pub.make_word_list = function(data){
+		var box = d3.select('#left-col').append('table').selectAll('tr').data(data).enter()
+		.append('tr')
+		.style('background-color',function(d,i){if (i%2==0) return '#deebf7'});
+		
+		box.append('td').text(function(d){return d.position});
+		box.append('td').text(function(d){return d.word});
+		box.append('td').text(function(d){return d.total});
+		
+		box.on('mouseover',CF.histHover).on('click',CF.histClick);
 	}
 
 	return pub;//return public variables
