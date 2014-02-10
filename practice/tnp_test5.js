@@ -4,7 +4,35 @@ var G = { // object for G scope
 	dims:{
 		chart:new Dimension({width:1076,height:500,top:3,right:3,bottom:20,left:50}),
 		timeline:new Dimension({width:1076,height:75,top:5,right:5,bottom:20,left:30}),
+		wordline:new Dimension({width:1076,height:150,top:5,right:5,bottom:20,left:30}),
 	}
+}
+
+
+//add axis to G.dims.chart
+G.dims.chart.y = d3.scale.linear().range([G.dims.chart.height,0]); //0,0 is top left corner
+G.dims.chart.axis = {
+	y:d3.svg.axis().scale(G.dims.chart.y).orient('left'),
+}
+
+//add axis to G.dims.timeline
+$.extend(G.dims.timeline,{
+	x:d3.time.scale().range([0, G.dims.timeline.width]),
+	y:d3.scale.linear().range([G.dims.timeline.height,0])
+});
+G.dims.timeline.axis = {
+	x:d3.svg.axis().scale(G.dims.timeline.x).orient("bottom"),
+	y:d3.svg.axis().scale(G.dims.timeline.y).orient("left").ticks(5),
+}
+
+//add axis to G.dims.wordline
+$.extend(G.dims.wordline,{
+	x:d3.time.scale().range([0, G.dims.wordline.width]),
+	y:d3.scale.linear().range([G.dims.wordline.height,0]),
+});
+G.dims.wordline.axis = {
+	x:d3.svg.axis().scale(G.dims.wordline.x).orient("bottom"),
+	y:d3.svg.axis().scale(G.dims.wordline.y).orient("left").ticks(5),
 }
 
 var CF = function(){ // namespace for Chart Functions
@@ -19,7 +47,7 @@ var CF = function(){ // namespace for Chart Functions
 		.attr("width", G.dims.chart.total_width())
 		.attr("height", G.dims.chart.total_height());
 		
-		//get g elements for both charts
+		//get g elements for chart
 		G.chart = G.svg.append('g')
 		.attr('transform','translate('+G.dims.chart.left+','+G.dims.chart.top+')');
 		
@@ -29,6 +57,13 @@ var CF = function(){ // namespace for Chart Functions
 		.attr("height", G.dims.timeline.total_height())
 		.append('g')
 		.attr('transform','translate('+G.dims.timeline.left+','+G.dims.timeline.top+')');;
+		
+		//get svg element for wordline
+		G.wordline = d3.select('svg#wordline')
+		.attr("width", G.dims.wordline.total_width())
+		.attr("height", G.dims.wordline.total_height())
+		.append('g')
+		.attr('transform','translate('+G.dims.wordline.left+','+G.dims.wordline.top+')');;
 		
 		//load data
 		G.timer.start_log("Load JSON...");
@@ -96,11 +131,11 @@ var CF = function(){ // namespace for Chart Functions
 		G.words.word = hover.__data__.word;
 		var extent = G.timeline.brush.extent();
 		CF.change_bars(G.words.getHistogram(extent[0],extent[1]));
+		CF.add_word(hover.__data__.word);
 	}
 	
 	//brush function
 	pub.brushed = function() {
-		console.log(d3.event);
 		var extent = G.timeline.brush.extent();
 		CF.change_bars(G.words.getHistogram(extent[0],extent[1]));
 	}
@@ -118,23 +153,6 @@ var CF = function(){ // namespace for Chart Functions
 	pub.stack = function(d){return d.stack}
 	pub.word = function(d){return d.word}
 	pub.time = function(d){return d.time}
-	
-	//add axis to G.dims
-	G.dims.chart.y = d3.scale.linear().range([G.dims.chart.height,0]); //0,0 is top left corner
-	G.dims.chart.axis = {
-		y:d3.svg.axis().scale(G.dims.chart.y).orient('left'),
-	}
-	
-	G.dims.timeline.x = d3.time.scale()
-	.range([0, G.dims.timeline.width]);
-	
-	G.dims.timeline.y =  d3.scale.linear()
-	.range([G.dims.timeline.height,0]);
-
-	G.dims.timeline.axis = {
-		y:d3.svg.axis().scale(G.dims.timeline.y).orient("left").ticks(5),
-		x:d3.svg.axis().scale(G.dims.timeline.x).orient("bottom")
-	}
 	
 	pub.make_bar_chart = function(data) {
 		//set dimensions that require data
@@ -199,6 +217,15 @@ var CF = function(){ // namespace for Chart Functions
 		.attr('class', 'hover')
 		.on('mouseover',CF.histHover)
 		.on('click',CF.histClick);
+		
+		G.chart.append('text')
+		.attr({
+			x:60,
+			y:30,
+			class:'title'
+		})
+		.style('font-size','24pt')
+		.text('Frequency of top 112 Words');
 	}
 	
 	pub.change_bars = function(data){
@@ -213,7 +240,7 @@ var CF = function(){ // namespace for Chart Functions
 		
 	}
 	
-	pub.make_timeline = function(data,broncos,seahawks) {
+	pub.make_timeline = function(data) {
 		//set dimensions that require data
 		G.dims.timeline.x
 		.domain([CF.time(data[0]),CF.time(data[data.length-1])])
@@ -238,15 +265,109 @@ var CF = function(){ // namespace for Chart Functions
 		.attr("class", "line")
 		.attr("d", line);
 		
-		/*
-		G.timeline.append("path").datum(broncos)
-		.attr("class", "line")
-		.attr("d", line);
+		G.timeline.append('text')
+		.attr({
+			x:20,
+			y:12,
+			class:'title'
+		}).text('Tweets Per Second');
+	}
+	
+	var wordline = {
+		colors:['#e41a1c','#4daf4a','#984ea3','#ff7f00','#a65628','#f781bf'],
+		words:[],
+		c:0,
+	}
+	
+	pub.add_word = function(word) {
 		
-		G.timeline.append("path").datum(seahawks)
+		if(wordline.words.length>=6){ // remove first element
+			var w = wordline.words.shift();
+			wordline.colors.push(w.c);
+		}
+		wordline.c++;
+		wordline.words.push({
+			'word':word,
+			'data':G.words.getTweetTimeline(word),
+			'c':wordline.colors.shift()});
+		
+		if(wordline.c==1) { // first time
+			
+			//set x axis
+			var time_range = d3.extent(wordline.words[0].data,CF.time);
+			G.dims.wordline.x
+			.domain([time_range[0],time_range[1]]);
+			
+			G.wordline.append('g').attr("class", "x axis")
+			.attr('transform','translate(0,'+G.dims.wordline.height+')')
+			.call(G.dims.wordline.axis.x);
+			
+			//only create y axis
+			// add axis
+			G.wordline.append('g').attr("class", "y axis")
+			//.attr('transform','translate(25,'+0+')');
+			
+			G.wordline.append('g').attr('class','words');
+		}
+		
+		CF.redraw_words();
+	}
+	
+	pub.remove_word = function(){
+		console.log(d3.event,$(d3.event.target).text());
+		var word = $(d3.event.target).text();
+		var color = '';
+		wordline.words = wordline.words.filter(function(ele){
+			if (ele.word!==word)
+				return true;
+			color = ele.c;
+			return false});
+		wordline.colors.push(color);
+		CF.redraw_words();
+	}
+	
+	pub.redraw_words = function() {
+		//remove help text and old legend
+		$('#word-legend').children().remove();
+		
+		//set dimensions that require data
+		var tweet_max = d3.max(wordline.words,function(w){
+			return d3.max(w.data,function(d){
+				return d.count;
+			});
+		});
+
+		//scale y axis
+		G.dims.wordline.y
+		.domain([0,tweet_max]);
+		G.wordline.selectAll('g.axis.y').call(G.dims.wordline.axis.y);
+		
+		//create line
+		var line = d3.svg.line()
+		.x(function(d){return G.dims.wordline.x(CF.time(d))})
+		.y(function(d){return G.dims.wordline.y(CF.count(d))});
+		
+		var lines = G.wordline.select('g.words').selectAll('path').data(wordline.words)
+		.style('stroke',function(d){return d.c})
+		.attr('d',function(w){
+			return line(w.data,function(d){d.count});
+		});
+		
+		lines.enter().append('path')
+		.attr('d',function(w){
+			return line(w.data,function(d){d.count});
+		})
 		.attr("class", "line")
-		.attr("d", line);
-		*/
+		.style('stroke',function(d){return d.c});
+		
+		//add legend
+		d3.select($('#word-legend')[0]).selectAll('li').data(wordline.words).enter()
+		.append('li')
+		.style('color',function(d){return d.c})
+		.append('span')
+		.style('cursor','pointer')
+		.text(function(d){return d.word})
+		.on('click',CF.remove_word);
 	}
 	
 	pub.make_word_list = function(data){
@@ -260,7 +381,6 @@ var CF = function(){ // namespace for Chart Functions
 		
 		box.on('mouseover',CF.histHover).on('click',CF.histClick);
 	}
-
 	return pub;//return public variables
 }();
 
@@ -268,7 +388,7 @@ var CF = function(){ // namespace for Chart Functions
 $(function(){
 	
 	Tabs.make();
-	$('div.tabs>ul>li').click(CF.toggleChart);
+	$('div.tabs>ul>li.re-draw').click(CF.toggleChart);
 	
 	//ajax load of json file
 	$.ajax({
