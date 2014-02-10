@@ -1,14 +1,23 @@
-#chart rect.bars {
-  fill: steelblue;
+* {
+	font-family:sans-serif;
+}
+
+#chart rect.total {
+  fill: #377eb8;
+}
+
+#chart rect.stack {
+	fill:#4daf4a;
 }
 
 #chart rect.background {
   fill: white;
+  fill-opacity:1;
 }
 
-#chart rect.dynamic {
+#chart rect.hover {
 	fill:black;
-	fill-opacity:.3;
+	fill-opacity:0;
 }
 
 #wrapper {
@@ -22,7 +31,7 @@
 .chart-section {
 	position:relative;
 	left: 50%;
-	margin: 10px 0px 10px -500px;
+	margin: 0px 0px 5px -538px;
 }
 
 .chart-border {
@@ -34,11 +43,21 @@
 
 #stats {
 	position: absolute;
-	top: 10px; 
 	right: 10px; 
-	border: 3px double black; 
-	width: 200px;
-	padding: 0px 10px;  
+	padding: 0px 10px;
+	font-size:10pt;
+}
+
+#stats dt {
+	display:inline-block;
+	font-weight:bold;
+}
+
+#stats dd {
+	display:inline-block;
+	font-style:italic;
+	text-align:left;
+	margin:0px 5px;
 }
 
 .line {
@@ -56,11 +75,35 @@
 
 .axis text {
 	fill:black;
-	font: 10px sans-serif;
+	font-size:10px;
 }
 
 .brush .extent {
 	stroke: #fff;
 	fill-opacity: .125;
 	shape-rendering: crispEdges;
+}
+
+.tabs>ul {
+	margin:0px;
+	padding-left:15px;
+}
+
+.tabs>ul>li {
+	display: inline-block;
+	list-style:none;
+	border:3px solid black;
+	border-bottom:0px;
+	background:white;
+	cursor:pointer;
+	padding:2px 5px;
+	border-radius:10px 10px 0px 0px
+}
+
+.tabs>ul>li:hover {
+	background:lightgray;
+}
+
+.tabs>.content>div {
+	display:none;
 }

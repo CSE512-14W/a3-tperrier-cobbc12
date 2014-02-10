@@ -1,29 +1,3 @@
-/*
-Array.prototype.sum = function(f){
-	f = f || function(d){return d}
-	return this.reduce(function(a, b) { return [f(a) + f(b)]; }, 0);
-	}
-	
-	
-var getWindowAvgArray = function(array, win){
-	ret_arr = []
-	for (var i = 0; i < array.length; i++){
-		beg = i - win
-		end = i + win
-		if (beg < 0){
-			beg = 0
-		}
-		if (end > array.length -1){
-			end = array.length -1
-		}
-		ret_arr.push(array.slice(beg,end).sum(function(d){
-			return d[0];
-		})/(1.0*(end-beg));			
-	}
-return ret_arr;
-}	*/
-	
-
 /*************
 Word Count Class
 - reads a json array of tweets
@@ -45,7 +19,10 @@ $.extend(WordCount.prototype,{
 		this.words = json.w;	
 		this.counts = json.s;	
 		this.range = json.r;
+		this.relative = json.t;
 		this.order = 1;
+		this.stack_time = true;
+		this.word = 'win';
 		return this;
 	},
 	
@@ -57,26 +34,42 @@ $.extend(WordCount.prototype,{
 		return this.counts[this.range.e-seconds]
 	},
 	
-	getIndex:function(date){
-		console.log(date,date.valueOf(),this.range.s,this.range.e,date.valueOf()/100-this.range.s);
-		return Math.floor(date.valueOf()/1000)-this.range.s;
+	getDateIndex:function(date){
+		if(!date) return date;
+		if(date.constructor==Date){
+			return Math.floor(date.valueOf()/1000)-this.range.s;
+		}else{
+			return date%this.counts.length;
+		}
+	},
+	
+	getWordIndex:function(word){
+		if (!word) return word;
+		return (word.constructor==String)?this.words.indexOf(word):word;
+	},
+	
+	getRelativeHistogram:function(word,ws,we){
+		var ws = ws || 2, we = we || this.words.length;
+		return this.relative[this.getWordIndex(word)].slice(ws,we);
+	},
+	
+	getTimeHistogram:function(s,e,ws,we){
+		var s =  this.getDateIndex(s) || 0, e = this.getDateIndex(e) || this.counts.length-1;
+		var ws = ws || 2, we = we || this.words.length;
+		var start = this.counts[s].slice(ws+1,we+1);
+		return this.counts[e].slice(ws+1,we+1).map(function(ele,idx){
+			return ele-start[idx]
+		});
 	},
 	
 	getHistogram:function(s,e,ws,we){
-		var s =  s || 0, e = e || this.counts.length, counts = [];
-		if(s instanceof Date) {
-			s = this.getIndex(s);
-		}
-		if(e instanceof Date) {
-			e = this.getIndex(e);
-		}
-		console.log(s,e);
-		var ws = ws || 3, we = we || 90;
-		var start = this.counts[s],end = this.counts[e-1];
-		for(var i=ws; i<we; i++){
-			counts.push({'word':this.words[i],'count':end[i]-start[i],'position':i-ws}); 
-		}
-		return counts;
+		var ws = ws || 2, we = we || this.words.length;
+		var total = this.getTimeHistogram(0,this.counts.length,ws,we);
+		var stack = this.stack_time?this.getTimeHistogram(s,e,ws,we):this.getRelativeHistogram(this.word,ws,we);
+		
+		return this.words.slice(ws,we).map(function(word,idx){
+			return {'word':word,'total':total[idx],'stack':stack[idx],'position':idx+1}
+		});
 	},
 	
 	/*
@@ -93,10 +86,10 @@ $.extend(WordCount.prototype,{
 	
 	//gives average tweets per second binned by window
 	getTweetTimeline:function(word,win){
-		var word = this.words.indexOf(word)+1 || 0, win = win || 60;
-		var timeline = [], t_start = this.range.s*1000;
+		var word = this.getWordIndex(word)+1 || 0, win = win || 60;
+		var timeline = [];
 		for(var i=0; i<this.counts.length-win; i+=win){
-			timeline.push( {'time':new Date(t_start+(i*1000)),
+			timeline.push( {'time':new Date((this.range.s+i)*1000),
 				'count':(this.counts[i+win][word]-this.counts[i][word])/win});
 		}
 		return timeline;
@@ -162,3 +155,35 @@ $.extend(Dimension.prototype,{
 		return this.height+this.top+this.bottom;
 	}
 });
+
+var Tabs = {
+	make:function(){
+		ele = $('div.tabs');
+		ele.each(function(i){
+			Tabs.init(this);
+		});
+	},
+	init:function(ele){
+		ele = $(ele);
+		//show active tab
+		var active_id = '#'+ele.find('ul>li.active').attr('id');
+		console.log(ele.find('.content '+active_id));
+		ele.find('.content '+active_id).css('display','block');
+		
+		//switch tabs on click
+		ele.find('ul>li').click(function(evt){
+			Tabs.show(this);
+		});
+	},
+	
+	show:function(ele){
+		var active_id = '#'+$(ele).attr('id');
+		
+		var tabs = $(ele).closest('div.tabs');
+		console.log(tabs,ele,active_id);
+		//hide last tab
+		tabs.find('.content>div').css('display','none');
+		//show this tab
+		tabs.find('.content '+active_id).css('display','block');
+	}
+}
