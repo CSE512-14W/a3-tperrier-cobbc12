@@ -1,0 +1,184 @@
+* {
+	font-family:sans-serif;
+}
+
+#chart rect.total {
+  fill: #377eb8;
+}
+
+#chart rect.stack {
+	fill:#4daf4a;
+}
+
+#chart rect.background {
+  fill: white;
+  fill-opacity:1;
+}
+
+#chart rect.hover {
+	fill:black;
+	fill-opacity:0;
+}
+
+#chart rect.selected {
+	fill-opacity:1 !important;
+	fill:orange !important;
+}
+
+#wrapper {
+	position:relative;
+	width:1378px;
+	height:815px;
+	background-color:#ccc;
+	margin:auto;
+}
+
+#left-col {
+	position:absolute;
+	left:10px;
+	top:10px;
+	height:790px;
+	background-color:white;
+	width:250px;
+	border:3px solid black;
+	overflow-y:auto;
+}
+
+#left-col table {
+	padding:0px;
+	margin:0px;
+	width:100%;
+	border-collapse:collapse;
+}
+
+#left-col tr {
+	font-size:10pt;
+	padding:3px;
+}
+
+#left-col tr:hover {
+	background-color:#eee;
+}
+
+#left-col  tr:not(:first-child) td{
+	border-top:1px #ddd dashed;
+}
+
+
+#right-col {
+	position:absolute;
+	width:1076px;
+	left: 280px;
+	top:10px;
+}
+
+.chart-section {
+	position:relative;
+	left: 50%;
+	margin: 0px 0px 5px -538px;
+}
+
+.chart-border {
+	position:relative;
+	background-color:white;
+	border: 3px solid black;
+	display:inline-block;
+}
+
+#stats {
+	position: absolute;
+	right: 10px; 
+	padding: 0px 10px;
+	font-size:10pt;
+}
+
+#stats dt {
+	display:inline-block;
+	font-weight:bold;
+}
+
+#stats dd {
+	display:inline-block;
+	font-style:italic;
+	text-align:left;
+	margin:0px 5px;
+}
+
+#word-legend {
+	position: absolute;
+	left: 30px; 
+	padding: 0px 10px;
+	font-size:10pt;
+}
+
+#word-legend li {
+	list-style:square;
+	display:inline-block;
+	font-style:italic;
+	text-align:left;
+	margin:0px 5px;
+}
+
+#page_title {
+	position:absolute;
+	right:250px;
+	top:-10px;
+	font-size:24pt;
+}
+
+.brush .extent {
+	fill:#4daf4a;
+}
+
+.title {
+	font-weight:bold;
+	font-size:16px;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.axis path,
+.axis line {
+  	fill: none;
+  	stroke: #000;
+  	shape-rendering: crispEdges;
+}
+
+.axis text {
+	fill:black;
+	font-size:10px;
+}
+
+.brush .extent {
+	stroke: #fff;
+	fill-opacity: .125;
+	shape-rendering: crispEdges;
+}
+
+.tabs>ul {
+	margin:0px;
+	padding-left:15px;
+}
+
+.tabs>ul>li {
+	display: inline-block;
+	list-style:none;
+	border:3px solid black;
+	border-bottom:0px;
+	background:white;
+	cursor:pointer;
+	padding:2px 5px;
+	border-radius:10px 10px 0px 0px
+}
+
+.tabs>ul>li:hover {
+	background:lightgray;
+}
+
+.tabs>.content>div {
+	display:none;
+}
