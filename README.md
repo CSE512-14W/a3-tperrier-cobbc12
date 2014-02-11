@@ -1,14 +1,22 @@
-## [Demo of final code:](http://homes.cs.washington.edu/~tperrier/a3/) 
+### [Demo of final code:](http://homes.cs.washington.edu/~tperrier/a3/) (link)
 Be patient! It might take up to around 30 seconds to load, and there's no "loading" icon while you wait. 
 Also, be sure you're viewing it on a big screen (or minimize the view until you can see everything at once on a smaller screen). 
 
-## Instructions for running our code: 
+Most tested in Chrome.
 
+For offline use: 
 
-## Example of something cool you can find in our viz: 
+* Download datafile [here](http://homes.cs.washington.edu/~tperrier/a3/all.json) (34.6mb).
+* Change line 444 of <code>chart_maker.js</code> to point to downloaded file.
+* Browse through local server. 
 
+### Example of something cool you can find in our viz: 
 
-## Data Domain Description: 
+One interesting example is looking at how retweets fall off. Most of the @ mentions that appear in our dataset as "popular words" are coming from someone being frequently retweeted. You can see a pretty cool fall-off pattern if you look at the timeline of these and how they get popular for a very isolated time period. 
+
+Another one: In "by word" mode, click on mayweather at position 50, the corresponding terms that are also high are floyd, $10.4, million, and bet. This is because he sent out a (fake) tweet saying that he'd bet that amount on the game, and this was picked up by other users. When you view just mayweather on the timeline, you can see when he first tweeted that and when other people retweeted it (there are several spikes, probably from where someone well-known retweeted it and it was subsequently shared a lot). The other terms that I listed have an almost identical timeline view.
+
+### Data Domain Description: 
 
 We decided to create a visualization of Twitter data from the Super Bowl. Although we chose to collect football-related Tweets, we believe that the final visualization also has potential to help people explore data from other events. With slightly more complex data collection methods and by implementing scripts for real-time data processing (both of which we decided were beyond the scope of what we hoped to accomplish for this project), the visualization could even be generated with live streaming data during an event. 
 
@@ -18,11 +26,11 @@ Because the Super Bowl tends to have a similar volume of Tweets to fast-moving c
 
 An important goal during the process of finding and curating Twitter data for crisis response is understanding how an event is evolving, which often involves understanding which how various terms become popular or fade out of popularity during certain phases of the event (ex. preparation for a hurricane, the actual impact of the hurricane, and several stages of recovery after impact). Currently, the best/most widely-used method for gaining this kind of awareness is simply monitoring streams of tweets and trying to gain situational awareness through memory or through marking relevant tweets in some way (ex. by copying and pasting them into spreadsheets). Exploring visualizations that convey similar situational awareness information seems worthwhile, and a visualization that explores words within a large set of relevant tweets, allowing users to compare how the popularity of various words has changed over time, seems appropriate.
 
-## Storyboard: 
+### Storyboard: 
 
-![alt tag](https://raw.github.com/CSE512-14W/a3-tperrier-cobbc12/master/storyboard.png)
+![image of storyboard](https://raw.github.com/CSE512-14W/a3-tperrier-cobbc12/master/storyboard.png)
 
-## Changes between storyboard and final:
+### Changes between storyboard and final:
 
 Unfortunately, our Twitter collection failed during (actually, before) the big game. This was due to an unforeseen issue with MongoDB only being able to handle a certain amount of data and because we did a test collection the night before which was larger than we realized. This test collection became our actual dataset. This means that we were unable to annotate real-world events during the game to see how word usage and volume may have changed at these times. While this may make for a slightly less “exciting” visualization final product, it is much more portable to other datasets and would require less changes to make it work on live data. 
 
@@ -30,11 +38,13 @@ There were a few other small changes we made. For example, we chose to allow use
 
 Our initial storyboard also showed a slightly different layout, fewer bars, and brush-select and new timelines appearing in the same graph. Many of these differences are a result of the large number of interesting words we wanted to be able to display, needing to switch between "by word" and "by time" modes (for speed), and the fact that having too many line graphs in the same figure was visually too much information. 
 
-## Brief Description of Final Viz: 
+### Brief Description of Final Viz: 
 
 Our final visualization allows you to explore popular words within tweets leading up to the Superbowl, either based on their co-occurrence with other popular words or by selecting a specified time range.
 
-## Full Descrption of Final Viz: 
+![image of final viz](https://raw.github.com/CSE512-14W/a3-tperrier-cobbc12/master/finalviz_a3.png)
+
+### Full Descrption of Final Viz: 
 
 We collected tweets between 02/01/2014 at 19:12:53 and 02/02/2014 at 10:35:54 using the search terms “Seahawks” and “Broncos.” We collected a total of 578,646 tweets. We preprocessed the data to calculate word occurrence across all of these tweets. In total, 254 words occurred in more than 3000 tweets. We eliminated “stop” words (and other common Twitter “words” like “RT”) and were left with 114 words to include in our dataset. Since every tweet contains one or both of the two search terms (“Seahawks” and “Broncos”), we also exclude these two words since their tweets/second timelines look almost exactly the same as the overall timeline. We prominently display a histogram (bar graph) of all 112 remaining words. In blue, we show the histogram for the entire collection period. 
 
@@ -50,14 +60,17 @@ As users click words, either in the bar graph or the list of words, the timeline
 
 Colors were chosen using color brewer (http://colorbrewer2.org). We chose colors to represent qualitative data. Blue and green were chosen as the main colors because they are the team colors of the game-winning Seahawks. In general, we tried to keep very few colors in the main part of the visualization (sticking with the colors that color brewer recommends for smaller datasets) and only use more colors when necessary for showing multiple timelines in the bottommost view. 
 
-## Development Process:
+### Development Process:
 
-<b>Collecting data - </b>Trevor set up several virtual machines so that we could have multiple tweet collections going at the same time (as an attempt to avoid twitter’s 50 tweet/second rate limit). Camille installed the necessary libraries and wrote scripts to collect tweets and put them in a MongoDB. ~8 hours 
-<b>Processing Data - </b>Trevor did most of this. Camille did some very basic initial exploration on her own as well, but the processed data that went into the final product was Trevor’s. ~5 hours (a lot of this was dealing with twitter emojis grr). 
-<b>D3 and Javascript - </b>We spent a lot of time working collocated. Camille was/is new to Javascript, so she was much less productive and spent a lot of exploratory time learning without actually accomplishing much. Camille did figure out brush selection, making the small bars be select-able over a larger area, and creating line graphs. She also chose colors that would be printer- and colorblind- friendly. Trevor did the rest. Total ~?? hours. 
-<b>Writeup - </b>Camille mostly did the writeup. ~3 hours 
+* <b>Collecting data - </b>Trevor set up several virtual machines so that we could have multiple tweet collections going at the same time (as an attempt to avoid twitter’s 50 tweet/second rate limit). Camille installed the necessary libraries and wrote scripts to collect tweets and put them in a MongoDB. ~8 hours 
 
-## Tools
+* <b>Processing Data - </b>Trevor did most of this. Camille did some very basic initial exploration on her own as well, but the processed data that went into the final product was Trevor’s. ~5 hours (a lot of this was dealing with twitter emojis grr). 
+
+* <b>D3 and Javascript - </b>We spent a lot of time working collocated. Camille was/is new to Javascript, so she was much less productive and spent a lot of exploratory time learning without actually accomplishing much. Camille did figure out brush selection, making the small bars be select-able over a larger area, and creating line graphs. She also chose colors that would be printer- and colorblind- friendly. Trevor did the rest. Total ~25 hours. 
+
+* <b>Writeup - </b>Camille mostly did the writeup. ~3 hours 
+
+### Tools
 
 * http://d3js.org
 * http://colorbrewer2.org
