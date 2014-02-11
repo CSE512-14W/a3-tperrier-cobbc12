@@ -20,7 +20,7 @@ An important goal during the process of finding and curating Twitter data for cr
 
 ## Storyboard: 
 
-![alt tag](https://raw.github.com/CSE512-14W/a3-tperrier-cobbc12/master/storyboard.png)
+![image of storyboard](https://raw.github.com/CSE512-14W/a3-tperrier-cobbc12/master/storyboard.png)
 
 ## Changes between storyboard and final:
 
@@ -33,6 +33,8 @@ Our initial storyboard also showed a slightly different layout, fewer bars, and 
 ## Brief Description of Final Viz: 
 
 Our final visualization allows you to explore popular words within tweets leading up to the Superbowl, either based on their co-occurrence with other popular words or by selecting a specified time range.
+
+![image of final viz](https://raw.github.com/CSE512-14W/a3-tperrier-cobbc12/master/finalviz_a3.png)
 
 ## Full Descrption of Final Viz: 
 
