@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<!-- d3 uses the pi symbol so we need UTF8 -->
+	<meta http-equiv="content-type" content="text/html; charset=UTF8">
+	
+	<script src="libs/d3/d3.v3.js" type="text/javascript"></script>
+	<script src="libs/jquery.js" type="text/javascript"></script>
+	<script src="tweetHistogram.js" type="text/javascript"></script>
+	<script src="chart_maker.js" type="text/javascript"></script>
+
+	<link rel="stylesheet" href="tweetHistogram.css"/>
+	
+	</head>
+	
+	<link rel="stylesheet" href="tweetHistogram.css"/>
+	
+	</head>
+	
+	<body>
+		
+		<div id='wrapper'>
+		
+			<div id='left-col'></div>
+			
+			<div id='right-col'>
+				<span id="page_title"> --- Tweets Leading Up To #sb48 --- </span>
+				<div class='tabs'>
+					<ul>
+						<li id='timeline' class='re-draw'>By Time</li>
+						<li id='word' class='re-draw'>By Word</li>
+						<li id='description' class='active'>Description</li>
+					</ul>
+					<div class='content'>
+				
+						<div id='timeline' class='chart-section'>
+							<div class='chart-border'>
+								<svg id='timeline'></svg>
+							</div>
+						</div>
+						
+						<div id='word' class='chart-section'>
+							<div class='chart-border' style="width:1076px;height:75px;">
+								Select by word.
+							</div>
+						</div>
+						
+						<div id='description' class='chart-section'>
+							<div class='chart-border' style="width:1060px;height:69px; font-size:13px;padding:8px;">
+								This is a visualization of tweets collected from 19:12:53 on Feb 01 until 10:35:54 on Feb 02 with the search terms Seahawks and Broncos. In total 578,646 were collected.  We preprocessed the data to calculated occurrence of words within tweets. There were 254 words that appeared more than 3000 times.  After exluding stop words we were left with 114 words.  The graph below excludes the two most common words - seahawks and broncos - since they were our search terms and every tweet contains one or the other.<br/>
+								<ul style="margin:0px">
+								<li>Select <b>By Time</b> to highlight the number of tweets with each word during that time period.</li>
+								<li>Select <b>By Word</b> to highlight the number of tweets that contain each word.</li>
+							</div>
+						</div>
+						
+					</div> <!-- close content -->
+				</div><!-- close tabs -->
+				
+				<div class='chart-section'>
+					<div class='chart-border'>
+						<dl id="stats">
+							<dt>Word:</dt><dd id='word' style='width:100px' ></dd>
+							<dt>Total:</dt><dd id='total' style='width:50px'></dd>
+							<dt>Green:</dt><dd id='stack' style='width:50px'></dd>
+							<dt>Postion:</dt><dd id='position' style='width:15px'></dd>
+						</dl>
+						<svg id="chart"></svg>
+					</div>
+				</div>
+				
+				<div class='chart-section'>
+						<div class='chart-border'>
+							<ul id="word-legend"><div>Click on a word or bar to show frequency of time</div></ul>
+							<svg id='wordline'>
+							</svg>
+						</div>
+				</div>
+				
+			</div>
+		
+		</div>
+		
+	</body>
+	
+</html>
