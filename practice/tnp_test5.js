@@ -2,7 +2,7 @@ var G = { // object for G scope
 	words:new WordCount(),
 	timer:new Timer(),
 	dims:{
-		chart:new Dimension({width:1076,height:500,top:3,right:3,bottom:20,left:50}),
+		chart:new Dimension({width:1076,height:500,top:3,right:3,bottom:25,left:50}),
 		timeline:new Dimension({width:1076,height:75,top:5,right:5,bottom:20,left:30}),
 		wordline:new Dimension({width:1076,height:150,top:5,right:5,bottom:20,left:30}),
 	}
@@ -109,10 +109,6 @@ var CF = function(){ // namespace for Chart Functions
 	pub.histHover = function(){
 		if(G.last)G.last.style('fill-opacity',0);
 		var hover = d3.select($(this).parent().children('.hover')[0])[0][0];
-		if($(this).prop('tagName')=='TR'){
-			hover = G.chart.selectAll('g').selectAll('rect')[$(this).index()][2];
-		}
-		
 		var total = d3.select($(hover).parent().children('.total')[0])[0][0];
 	
 		$('#stats dd').each(function(i){
@@ -124,6 +120,7 @@ var CF = function(){ // namespace for Chart Functions
 	
 	//click histogram rect
 	pub.histClick = function() {
+		if(G.last_click)G.last_click.classed('selected',false);
 		var hover = d3.select($(this).parent().children('.hover')[0])[0][0];
 		if($(this).prop('tagName')=='TR'){
 			hover = G.chart.selectAll('g').selectAll('rect')[$(this).index()][2];
@@ -132,6 +129,10 @@ var CF = function(){ // namespace for Chart Functions
 		var extent = G.timeline.brush.extent();
 		CF.change_bars(G.words.getHistogram(extent[0],extent[1]));
 		CF.add_word(hover.__data__.word);
+		
+		G.last_click = d3.select(hover);
+		if(!G.words.stack_time)
+			G.last.attr('class','selected');
 	}
 	
 	//brush function
@@ -142,9 +143,15 @@ var CF = function(){ // namespace for Chart Functions
 	
 	//toggle word and timeline view
 	pub.toggleChart = function(evt) {
+		if(G.last_click)G.last_click.classed('selected',false);
 		G.words.stack_time = $(evt.target).attr('id')=='timeline';
 		var extent = G.timeline.brush.extent();
 		CF.change_bars(G.words.getHistogram(extent[0],extent[1]));
+		if(!G.words.stack_time){
+			var hover = G.chart.selectAll('g').selectAll('rect')[G.words.getWordIndex(G.words.word)][2];
+			G.last_click = d3.select(hover);
+			G.last.attr('class','selected');
+		}
 	}
 	
 	//helper function to get count and word
@@ -169,6 +176,15 @@ var CF = function(){ // namespace for Chart Functions
 		var bars = G.chart.selectAll('g').data(data).enter().append('g')
 		.attr("transform", function(d, i) { return "translate(" + i * G.dims.chart.barWidth + ")"; });
 		
+		// quarter background for mouseover on small bars
+		bars.append('rect')
+		.attr('width', G.dims.chart.barWidth-1)
+		.attr('height',G.dims.chart.height*0.25)
+		.attr('y',G.dims.chart.height*0.75)
+		.attr('class', 'background')
+		.on('mouseover',CF.histHover)
+		.on('click',CF.histClick);
+		
 		// total slice
 		bars.append('rect')
 		.attr('width',G.dims.chart.barWidth-1)
@@ -183,6 +199,7 @@ var CF = function(){ // namespace for Chart Functions
 		.attr('y',function(d){return G.dims.chart.y(d.stack)})
 		.attr('class', 'stack')
 		
+		/*
 		//place word
 		bars.append('text')
 		.on('mouseover',CF.histHover)
@@ -199,13 +216,14 @@ var CF = function(){ // namespace for Chart Functions
 			'x':G.dims.chart.barWidth/2,
 			})
 		;
+		*/
 			
 		//place number
 		bars.append('text')
 		.text(function(d,i){if((i+1)%5==0)return d.position})
 		.style({'writing-mode':'tb','font-size':G.dims.chart.barWidth})
 		.attr({
-			'y':G.dims.chart.height+3,
+			'y':G.dims.chart.height+8,
 			'x':G.dims.chart.barWidth/2,
 			});
 		
@@ -225,7 +243,7 @@ var CF = function(){ // namespace for Chart Functions
 			class:'title'
 		})
 		.style('font-size','24pt')
-		.text('Frequency of top 112 Words');
+		.text('Histogram: Top 112 Words');
 	}
 	
 	pub.change_bars = function(data){
@@ -280,6 +298,8 @@ var CF = function(){ // namespace for Chart Functions
 	}
 	
 	pub.add_word = function(word) {
+		
+		if(wordline.words.filter(function(w){return w.word==word}).length==1) return;
 		
 		if(wordline.words.length>=6){ // remove first element
 			var w = wordline.words.shift();
@@ -360,6 +380,11 @@ var CF = function(){ // namespace for Chart Functions
 		.attr("class", "line")
 		.style('stroke',function(d){return d.c});
 		
+		lines.exit()
+		.remove();
+		
+		
+		
 		//add legend
 		d3.select($('#word-legend')[0]).selectAll('li').data(wordline.words).enter()
 		.append('li')
@@ -368,6 +393,24 @@ var CF = function(){ // namespace for Chart Functions
 		.style('cursor','pointer')
 		.text(function(d){return d.word})
 		.on('click',CF.remove_word);
+		
+		//add ticks
+		var color_ticks = G.chart.selectAll('rect.color_tick').data(wordline.words)
+		.attr({
+			fill:function(w){return w.c},
+			x:function(w){return (G.words.getWordIndex(w.word)-2)*G.dims.chart.barWidth }
+		});
+		
+		color_ticks.enter().append('rect').attr({
+			x:function(w){return (G.words.getWordIndex(w.word)-2)*G.dims.chart.barWidth },
+			y:G.dims.chart.height+1,
+			width:G.dims.chart.barWidth-1,
+			height:5,
+			fill:function(w){return w.c},
+			class:'color_tick'
+		});
+		
+		color_ticks.exit().remove();
 	}
 	
 	pub.make_word_list = function(data){

@@ -24,7 +24,7 @@
 			<div id='left-col'></div>
 			
 			<div id='right-col'>
-				
+				<span id="page_title"> --- Tweets Leading Up To #sb48 --- </span>
 				<div class='tabs'>
 					<ul>
 						<li id='timeline' class='re-draw'>By Time</li>
@@ -47,9 +47,10 @@
 						
 						<div id='description' class='chart-section'>
 							<div class='chart-border' style="width:1060px;height:69px; font-size:13px;padding:8px;">
-								This is a visualization of tweets collected from 19:12:53 on Feb 01 until 10:35:54 on Feb 02 with the search terms Seahawks and Broncos. In total 578,646 were collected.  We preprocessed the data to calculated word frequency per tweet. There were 254 words that appeared more than 3000 times.  We selected 114 of these words to include in this data set.  The graph below excludes the two most common words - seahawks and broncos - since they were our search terms and every tweet contains one or the other.<br/>
-								* Select <b>By Time</b> to highlight the number of tweets with each word during that time period.<br/> 
-								* Select <b>By Word</b> to highlight the number of tweets that contain each word.
+								This is a visualization of tweets collected from 19:12:53 on Feb 01 until 10:35:54 on Feb 02 with the search terms Seahawks and Broncos. In total 578,646 were collected.  We preprocessed the data to calculated occurrence of words within tweets. There were 254 words that appeared more than 3000 times.  After exluding stop words we were left with 114 words.  The graph below excludes the two most common words - seahawks and broncos - since they were our search terms and every tweet contains one or the other.<br/>
+								<ul style="margin:0px">
+								<li>Select <b>By Time</b> to highlight the number of tweets with each word during that time period.</li>
+								<li>Select <b>By Word</b> to highlight the number of tweets that contain each word.</li>
 							</div>
 						</div>
 						
@@ -61,7 +62,7 @@
 						<dl id="stats">
 							<dt>Word:</dt><dd id='word' style='width:100px' ></dd>
 							<dt>Total:</dt><dd id='total' style='width:50px'></dd>
-							<dt>Slice:</dt><dd id='stack' style='width:50px'></dd>
+							<dt>Green:</dt><dd id='stack' style='width:50px'></dd>
 							<dt>Postion:</dt><dd id='position' style='width:15px'></dd>
 						</dl>
 						<svg id="chart"></svg>
