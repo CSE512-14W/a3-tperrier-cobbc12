@@ -1,9 +1,7 @@
 ### [Demo of final code:](http://homes.cs.washington.edu/~tperrier/a3/) (link)
 Be patient! It might take up to around 30 seconds to load, and there's no "loading" icon while you wait. 
 Also, be sure you're viewing it on a big screen (or minimize the view until you can see everything at once on a smaller screen). 
-
-### Instructions for running our code: 
-
+Most tested in Chrome.
 
 ### Example of something cool you can find in our viz: 
 
