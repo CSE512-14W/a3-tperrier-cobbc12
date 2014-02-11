@@ -14,6 +14,8 @@ For offline use:
 
 One interesting example is looking at how retweets fall off. Most of the @ mentions that appear in our dataset as "popular words" are coming from someone being frequently retweeted. You can see a pretty cool fall-off pattern if you look at the timeline of these and how they get popular for a very isolated time period. 
 
+Another one: In "by word" mode, click on mayweather at position 50, the corresponding terms that are also high are floyd, $10.4, million, and bet. This is because he sent out a (fake) tweet saying that he'd bet that amount on the game, and this was picked up by other users. When you view just mayweather on the timeline, you can see when he first tweeted that and when other people retweeted it (there are several spikes, probably from where someone well-known retweeted it and it was subsequently shared a lot). The other terms that I listed have an almost identical timeline view.
+
 ### Data Domain Description: 
 
 We decided to create a visualization of Twitter data from the Super Bowl. Although we chose to collect football-related Tweets, we believe that the final visualization also has potential to help people explore data from other events. With slightly more complex data collection methods and by implementing scripts for real-time data processing (both of which we decided were beyond the scope of what we hoped to accomplish for this project), the visualization could even be generated with live streaming data during an event. 
