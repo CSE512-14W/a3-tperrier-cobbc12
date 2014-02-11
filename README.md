@@ -1,12 +1,13 @@
-## [Demo of final code:](http://homes.cs.washington.edu/~tperrier/a3/) 
+### [Demo of final code:](http://homes.cs.washington.edu/~tperrier/a3/) 
 Be patient! It might take up to around 30 seconds to load, and there's no "loading" icon while you wait. 
 Also, be sure you're viewing it on a big screen (or minimize the view until you can see everything at once on a smaller screen). 
 
-## Instructions for running our code: 
+### Instructions for running our code: 
 
 
-## Example of something cool you can find in our viz: 
+### Example of something cool you can find in our viz: 
 
+One interesting example is looking at how retweets fall off. Most of the @ mentions that appear in our dataset as "popular words" are coming from someone being frequently retweeted. You can see a pretty cool fall-off pattern if you look at the timeline of these and how they get popular for a very isolated time period. 
 
 ## Data Domain Description: 
 
