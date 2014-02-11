@@ -1,7 +1,14 @@
 ### [Demo of final code:](http://homes.cs.washington.edu/~tperrier/a3/) (link)
 Be patient! It might take up to around 30 seconds to load, and there's no "loading" icon while you wait. 
 Also, be sure you're viewing it on a big screen (or minimize the view until you can see everything at once on a smaller screen). 
+
 Most tested in Chrome.
+
+For offline use: 
+
+* Download datafile [here](http://homes.cs.washington.edu/~tperrier/a3/all.json) (34.6mb).
+* Change line 444 of <code>chart_maker.js</code> to point to downloaded file.
+* Browse through local server. 
 
 ### Example of something cool you can find in our viz: 
 
