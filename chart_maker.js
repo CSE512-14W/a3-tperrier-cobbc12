@@ -126,7 +126,10 @@ var CF = function(){ // namespace for Chart Functions
 	
 	//click histogram rect
 	pub.histClick = function() {
-		if(G.last_click)G.last_click.classed('selected',false);
+		if(G.last_click) {
+			G.last_click.classed('selected',false);
+			G.last_click.classed('hover',true);
+		}
 		var hover = d3.select($(this).parent().children('.hover')[0])[0][0];
 		if($(this).prop('tagName')=='TR'){
 			hover = G.chart.selectAll('g').selectAll('rect')[$(this).index()][3];
